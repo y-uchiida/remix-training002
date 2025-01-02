@@ -6,6 +6,16 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+// ページのリンクを追加するために、links関数をエクスポートする
+import type { LinksFunction } from "@remix-run/node";
+// app.css のURL を取得するために、appStylesHref をインポートする
+import appStylesHref from "./app.css";
+// ページのリンクを追加するために、links()をエクスポートする
+// エクスポートされたlinks() は、<Links /> コンポーネントにレンダリングされる
+export const links: LinksFunction = () => {
+  return [{ rel: "stylesheet", href: appStylesHref }];
+}
+
 // app/root.tsx はRoot Route で、
 // UIとして最初にレンダリングされるコンポーネントになる。
 // 通常はページのグローバルレイアウトが含まれる。
@@ -15,8 +25,8 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Links /> {/* links関数で追加したリンクをレンダリングする */}
         <Meta />
-        <Links />
       </head>
       <body>
         <div id="sidebar">
