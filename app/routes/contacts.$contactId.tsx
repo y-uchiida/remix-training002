@@ -11,11 +11,18 @@ import { json } from "@remix-run/node";
 
 import { getContact } from "../data";
 
+import type { LoaderFunctionArgs } from "@remix-run/node";
+import invariant from "tiny-invariant";
+
 // 引数として渡された params は、URL のパスパラメータを含むオブジェクト
 // このファイルは $contactId という名前の動的ルートを持つため、そのパスを持つオブジェクトになる
 // 例: /contacts/1 のとき、params には { contactId: "1" } が渡される
-export const loader = async ({ params }) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
+	invariant(params.contactId, "params.contactId is required");
 	const contact = await getContact(params.contactId);
+	if (!contact) {
+		throw new Response("Not Found", { status: 404 });
+	}
 	return json(contact);
 }
 
