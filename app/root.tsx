@@ -23,12 +23,19 @@ export const links: LinksFunction = () => {
 // Remix v3 ( = React Router v7) で非推奨
 import { json } from "@remix-run/node";
 
-import { ContactRecord, getContacts } from "./data";
+import { createEmptyContact, getContacts } from "./data";
 
 export const loader = async () => {
   const contacts = await getContacts();
   return json(contacts);
 };
+
+// POST /contacts にアクセスしたときに、新しい空の連絡先を作成する
+// Remix は、action() をサーバーサイドで実行したのち、その結果をクライアントに返す
+export const action = async () => {
+  const contact = await createEmptyContact();
+  return json(contact);
+}
 
 // app/root.tsx はRoot Route で、
 // UIとして最初にレンダリングされるコンポーネントになる。
