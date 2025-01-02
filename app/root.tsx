@@ -6,6 +6,9 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+// app/root.tsx はRoot Route で、
+// UIとして最初にレンダリングされるコンポーネントになる。
+// 通常はページのグローバルレイアウトが含まれる。
 export default function App() {
   return (
     <html lang="en">
