@@ -2,6 +2,7 @@ import {
   Form,
   Links,
   Meta,
+  Outlet,
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
@@ -57,7 +58,10 @@ export default function App() {
             </ul>
           </nav>
         </div>
-
+        <div id="detail">
+          {/* 子コンポーネントをレンダリングする位置をOutlet で指定する */}
+          <Outlet />
+        </div>
         <ScrollRestoration />
         <Scripts />
       </body>
