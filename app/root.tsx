@@ -21,7 +21,7 @@ export const links: LinksFunction = () => {
 
 // json レスポンスを作成するための関数をインポート
 // Remix v3 ( = React Router v7) で非推奨
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 
 import { createEmptyContact, getContacts } from "./data";
 
@@ -30,11 +30,12 @@ export const loader = async () => {
   return json(contacts);
 };
 
-// POST /contacts にアクセスしたときに、新しい空の連絡先を作成する
+// POST /contacts にアクセスしたときに、新しい空のcontactを作成する
 // Remix は、action() をサーバーサイドで実行したのち、その結果をクライアントに返す
+// ここでは、新しい空のcontact を作成し、その編集画面へリダイレクトしている
 export const action = async () => {
   const contact = await createEmptyContact();
-  return json(contact);
+  return redirect(`/contacts/${contact.id}/edit`);
 }
 
 // app/root.tsx はRoot Route で、
