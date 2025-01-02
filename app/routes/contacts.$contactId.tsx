@@ -1,19 +1,26 @@
 // contacts/$contactId.tsx で、contacts ページのリンクを追加する
 // /contacts/1 や /contacts/2 のような動的なURLを持つページを作成する
 
-import { Form } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import type { FunctionComponent } from "react";
 import type { ContactRecord } from "../data";
 
+// json レスポンスを作成するための関数をインポート
+// Remix v3 ( = React Router v7) で非推奨
+import { json } from "@remix-run/node";
+
+import { getContact } from "../data";
+
+// 引数として渡された params は、URL のパスパラメータを含むオブジェクト
+// このファイルは $contactId という名前の動的ルートを持つため、そのパスを持つオブジェクトになる
+// 例: /contacts/1 のとき、params には { contactId: "1" } が渡される
+export const loader = async ({ params }) => {
+	const contact = await getContact(params.contactId);
+	return json(contact);
+}
+
 export default function Contact() {
-	const contact = {
-		first: "Your",
-		last: "Name",
-		avatar: "https://placecats.com/200/200",
-		twitter: "your_handle",
-		notes: "Some notes",
-		favorite: true,
-	};
+	const contact = useLoaderData<typeof loader>();
 
 	return (
 		<div id="contact">
