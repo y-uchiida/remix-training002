@@ -35,7 +35,7 @@ export const loader = async () => {
 // 通常はページのグローバルレイアウトが含まれる。
 export default function App() {
   // loader で返されたデータを取得する
-  const contacts = useLoaderData<ContactRecord[]>();
+  const contacts = useLoaderData<typeof loader>();
 
   return (
     <html lang="en">
