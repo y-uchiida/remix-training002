@@ -1,5 +1,6 @@
 import {
   Form,
+  Link,
   Links,
   Meta,
   Outlet,
@@ -10,7 +11,7 @@ import {
 // ページのリンクを追加するために、links関数をエクスポートする
 import type { LinksFunction } from "@remix-run/node";
 // app.css のURL を取得するために、appStylesHref をインポートする
-import appStylesHref from "./app.css";
+import appStylesHref from "./app.css?url";
 // ページのリンクを追加するために、links()をエクスポートする
 // エクスポートされたlinks() は、<Links /> コンポーネントにレンダリングされる
 export const links: LinksFunction = () => {
@@ -26,7 +27,7 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Links /> {/* links関数で追加したリンクをレンダリングする */}
+        <Links />{/* links関数で追加したリンクをレンダリングする */}
         <Meta />
       </head>
       <body>
@@ -50,10 +51,10 @@ export default function App() {
           <nav>
             <ul>
               <li>
-                <a href={`/contacts/1`}>Your Name</a>
+                <Link to="/contacts/1">Your Name</Link>
               </li>
               <li>
-                <a href={`/contacts/2`}>Your Friend</a>
+                <Link to="/contacts/2">Your Friend</Link>
               </li>
             </ul>
           </nav>
