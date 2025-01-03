@@ -8,6 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useNavigation,
 } from "@remix-run/react";
 
 // ページのリンクを追加するために、links関数をエクスポートする
@@ -45,6 +46,9 @@ export const action = async () => {
 export default function App() {
   // loader で返されたデータを取得する
   const contacts = useLoaderData<typeof loader>();
+
+  // navigation() で、ページ遷移のステータス(idle, loading, submitting) を取得する
+  const navigation = useNavigation();
 
   return (
     <html lang="en">
@@ -109,7 +113,16 @@ export default function App() {
             )}
           </nav>
         </div>
-        <div id="detail">
+        <div
+          // navigation.status
+          // idle: ページ遷移中でない
+          // loading: ページ遷移中
+          // submitting: フォームが送信されている
+          className={
+            navigation.state === "loading" ? "loading" : ""
+          }
+          id="detail"
+        >
           {/* 子コンポーネントをレンダリングする位置をOutlet で指定する */}
           <Outlet />
         </div>
