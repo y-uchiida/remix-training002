@@ -166,8 +166,11 @@ export default function App() {
           // idle: ページ遷移中でない
           // loading: ページ遷移中
           // submitting: フォームが送信されている
+          // searching: 検索中 (遷移先ページにq が含まれているとき)
           className={
-            navigation.state === "loading" ? "loading" : ""
+            navigation.state === "loading" && !searching
+              ? "loading"
+              : ""
           }
           id="detail"
         >
