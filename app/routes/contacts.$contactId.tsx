@@ -113,7 +113,13 @@ const Favorite: FunctionComponent<{
 	// データの更新を行う(actionやloader を呼び出す)ための関数
 	const fetcher = useFetcher();
 
-	const favorite = contact.favorite;
+	// contact のfavorite の状態
+	// Optimistic UI として、fetcher.formData が存在する場合は、その値を使う
+	// favorite の更新が失敗した場合は元の状態に戻る
+	// そうでない場合は、contact.favorite を使う
+	const favorite = fetcher.formData
+		? fetcher.formData.get("favorite") === "true"
+		: contact.favorite;
 
 	return (
 		// fetcher.Form は、fetcher を使ってデータを更新するためのフォームを作成する
