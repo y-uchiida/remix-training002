@@ -9,6 +9,7 @@ import {
   ScrollRestoration,
   useLoaderData,
   useNavigation,
+  useSubmit,
 } from "@remix-run/react";
 
 import type {
@@ -65,6 +66,9 @@ export default function App() {
   // navigation() で、ページ遷移のステータス(idle, loading, submitting) を取得する
   const navigation = useNavigation();
 
+  // submit() で、フォームの送信を行う
+  const submit = useSubmit();
+
   useEffect(() => {
     const searchField = document.getElementById("q");
     if (searchField instanceof HTMLInputElement) {
@@ -85,7 +89,15 @@ export default function App() {
         <div id="sidebar">
           <h1>Remix Contacts</h1>
           <div>
-            <Form id="search-form" role="search">
+            <Form
+              id="search-form"
+              role="search"
+              // フォームの内容が更新されたとき、submit() でフォームの送信を行う
+              // submit() は、Remix が用意しているフォームの送信を行うためのフック
+              onChange={(e) => {
+                submit(e.currentTarget)
+              }}
+            >
               <input
                 id="q"
                 aria-label="Search contacts"
