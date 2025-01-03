@@ -104,7 +104,6 @@ export default function App() {
               onChange={(e) => {
                 submit(e.currentTarget)
               }}
-              className={searching ? "loading" : ""}
             >
               <input
                 id="q"
@@ -113,6 +112,7 @@ export default function App() {
                 type="search"
                 name="q"
                 defaultValue={q || ""}
+                className={searching ? "loading" : ""}
               />
               <div
                 aria-hidden
