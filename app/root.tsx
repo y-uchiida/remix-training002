@@ -39,7 +39,9 @@ export const loader = async ({
   const q = url.searchParams.get("q");
   // 検索フォームに入力された値を使って、contacts を取得
   const contacts = await getContacts(q);
-  return json(contacts);
+
+  // contacts と q を返す
+  return json({ contacts, q });
 };
 
 // POST /contacts にアクセスしたときに、新しい空のcontactを作成する
@@ -55,7 +57,9 @@ export const action = async () => {
 // 通常はページのグローバルレイアウトが含まれる。
 export default function App() {
   // loader で返されたデータを取得する
-  const contacts = useLoaderData<typeof loader>();
+  // contacts は、検索フォームに入力された値を使って取得したcontacts
+  // q は検索フォームに入力された値(検索キーワード)
+  const { contacts, q } = useLoaderData<typeof loader>();
 
   // navigation() で、ページ遷移のステータス(idle, loading, submitting) を取得する
   const navigation = useNavigation();
@@ -79,6 +83,7 @@ export default function App() {
                 placeholder="Search"
                 type="search"
                 name="q"
+                defaultValue={q || ""}
               />
               <div id="search-spinner" aria-hidden hidden={true} />
             </Form>
