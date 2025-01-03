@@ -11,8 +11,11 @@ import {
   useNavigation,
 } from "@remix-run/react";
 
-// ページのリンクを追加するために、links関数をエクスポートする
-import type { LinksFunction } from "@remix-run/node";
+import type {
+  LinksFunction, // ページのリンクを追加するために、links関数をエクスポートする
+  LoaderFunctionArgs, // loader 関数の引数を定義する
+} from "@remix-run/node";
+
 // app.css のURL を取得するために、appStylesHref をインポートする
 import appStylesHref from "./app.css?url";
 // ページのリンクを追加するために、links()をエクスポートする
@@ -27,8 +30,15 @@ import { json, redirect } from "@remix-run/node";
 
 import { createEmptyContact, getContacts } from "./data";
 
-export const loader = async () => {
-  const contacts = await getContacts();
+export const loader = async ({
+  request
+}: LoaderFunctionArgs) => {
+  // URL からクエリパラメータを取得する
+  const url = new URL(request.url);
+  // `q` は検索フォームのinput要素のname属性
+  const q = url.searchParams.get("q");
+  // 検索フォームに入力された値を使って、contacts を取得
+  const contacts = await getContacts(q);
   return json(contacts);
 };
 
