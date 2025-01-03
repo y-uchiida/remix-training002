@@ -29,6 +29,7 @@ export const links: LinksFunction = () => {
 import { json, redirect } from "@remix-run/node";
 
 import { createEmptyContact, getContacts } from "./data";
+import { useEffect } from "react";
 
 export const loader = async ({
   request
@@ -63,6 +64,14 @@ export default function App() {
 
   // navigation() で、ページ遷移のステータス(idle, loading, submitting) を取得する
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const searchField = document.getElementById("q");
+    if (searchField instanceof HTMLInputElement) {
+      // URL のクエリパラメータと検索フォームの入力値を同期させる
+      searchField.value = q || "";
+    }
+  }, [q]);
 
   return (
     <html lang="en">
