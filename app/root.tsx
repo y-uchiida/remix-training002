@@ -69,6 +69,13 @@ export default function App() {
   // submit() で、フォームの送信を行う
   const submit = useSubmit();
 
+  // 検索中かどうかを判定する
+  // navigation.location は、ページ遷移中(データロード中)はその遷移先のURLを持つ
+  // 遷移先のURL のクエリパラメータに`q` 含まれている場合、検索中と判定する
+  const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has("q");
+
   useEffect(() => {
     const searchField = document.getElementById("q");
     if (searchField instanceof HTMLInputElement) {
@@ -97,6 +104,7 @@ export default function App() {
               onChange={(e) => {
                 submit(e.currentTarget)
               }}
+              className={searching ? "loading" : ""}
             >
               <input
                 id="q"
@@ -106,7 +114,11 @@ export default function App() {
                 name="q"
                 defaultValue={q || ""}
               />
-              <div id="search-spinner" aria-hidden hidden={true} />
+              <div
+                aria-hidden
+                hidden={!searching}
+                id="search-spinner"
+              />
             </Form>
             <Form method="post">
               <button type="submit">New</button>
