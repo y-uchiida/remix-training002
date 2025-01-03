@@ -1,7 +1,7 @@
 // contacts/$contactId.tsx で、contacts ページのリンクを追加する
 // /contacts/1 や /contacts/2 のような動的なURLを持つページを作成する
 
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useFetcher, useLoaderData } from "@remix-run/react";
 import type { FunctionComponent } from "react";
 import type { ContactRecord } from "../data";
 
@@ -9,9 +9,9 @@ import type { ContactRecord } from "../data";
 // Remix v3 ( = React Router v7) で非推奨
 import { json } from "@remix-run/node";
 
-import { getContact } from "../data";
+import { getContact, updateContact } from "../data";
 
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
 // 引数として渡された params は、URL のパスパラメータを含むオブジェクト
@@ -25,6 +25,21 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 	}
 	return json(contact);
 }
+
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+	// invariant で、params.contactId が存在することを確認する
+	invariant(params.contactId, "params.contactId is required");
+
+	// request.formData() で、フォームデータを取得する
+	// このフォームデータには、フォームのinput要素のname属性とvalue属性が含まれる
+	// ここではfavorite という名前のinput要素が含まれる
+	const formData = await request.formData();
+
+	// updateContact 関数を使って、contact を更新する
+	return updateContact(params.contactId, {
+		favorite: formData.get("favorite") === "true",
+	});
+};
 
 export default function Contact() {
 	const contact = useLoaderData<typeof loader>();
@@ -94,10 +109,16 @@ export default function Contact() {
 const Favorite: FunctionComponent<{
 	contact: Pick<ContactRecord, "favorite">;
 }> = ({ contact }) => {
+	// fetcher は、ページの更新をせずに(ナビゲーションを伴わずに)
+	// データの更新を行う(actionやloader を呼び出す)ための関数
+	const fetcher = useFetcher();
+
 	const favorite = contact.favorite;
 
 	return (
-		<Form method="post">
+		// fetcher.Form は、fetcher を使ってデータを更新するためのフォームを作成する
+		// このフォームは、通常のフォームと同じように使えるが、対象ページへの遷移を行わない
+		<fetcher.Form method="post">
 			<button
 				aria-label={
 					favorite ? "Remove from favorite" : "Add to favorite"
@@ -107,6 +128,6 @@ const Favorite: FunctionComponent<{
 			>
 				{favorite ? "★" : "☆"}
 			</button>
-		</Form>
+		</fetcher.Form>
 	);
 }
