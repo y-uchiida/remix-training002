@@ -69,6 +69,9 @@ export default function Contact() {
 					</Form>
 
 					<Form
+						// action="destroy" のように相対パスを記述すると、現在表示中のURLを基準にして対象のURLへリクエストを送信する
+						// この場合、contacts/1 のページでこのフォームを送信すると、contacts/1/destroy にリクエストが送信される
+						// このURLを取り扱えるように、$contactId_.destroy.tsx を作成する
 						action="destroy"
 						method="post"
 						onSubmit={(event) => {
