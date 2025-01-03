@@ -102,7 +102,14 @@ export default function App() {
               // フォームの内容が更新されたとき、submit() でフォームの送信を行う
               // submit() は、Remix が用意しているフォームの送信を行うためのフック
               onChange={(e) => {
-                submit(e.currentTarget)
+                // 検索フォームの入力値の変更に合わせてフォームを送信しているので、
+                // 1文字の変更ごとにブラウザの履歴が増えてしまう
+                // これを回避するため、現在の履歴を置き換えるようにしている
+                // q がnull の場合は入力フォームが空欄なので、履歴を置き換えない
+                const isFirstSearch = q === null;
+                submit(e.currentTarget, {
+                  replace: !isFirstSearch,
+                });
               }}
             >
               <input
